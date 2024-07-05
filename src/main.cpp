@@ -1,0 +1,41 @@
+#include "511.h"
+//pinMode(LED_GPIO,OUTPUT);//测试用LED灯
+
+Button beginB(beginb_GPIO);//开机/关机按钮
+Button nextB(nextb_GPIO);//next按钮
+Button confirmB(confirmb_GPIO);//确认按钮
+frame startpage;//起始界面
+frame menu;//菜单界面
+frame functionpage;//功能界面
+Weather weatherinfo;//天气结构体
+tm timeinfo;//时间结构体
+int count=1;
+int menupage=0;
+bool isopen=0;
+bool runonce=0;
+
+
+/* setup --------------------------------------------------------------------*/
+void setup()
+{
+  Serial.begin(115200);//打开串口监视
+  epaperinit();
+  startpage.activate();
+  startpage.clear();
+  startpage.printstr(100,100,"大暴雷",1);
+  menu.activate();
+  menu.clear();
+  menu.printstr(0,0,"晴",1);
+  Display(startpage,menu);
+  delay(10000);
+  ClearPage();
+  delay(1000);
+  SleepMode();
+}
+
+/* The main loop -------------------------------------------------------------*/
+void loop()
+{ 
+
+}
+
