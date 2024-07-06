@@ -127,22 +127,31 @@ void getTime(tm &timeinfo_get){
 
 /*************绘图模块 ***********************************/
 //选择帧(打印未选择的帧会导致花屏!)
-void frame::activate(){
-  Paint_NewImage(thisframe,epaperw,epaperh,180,WHITE);
-  Paint_SelectImage(thisframe);
-  //selected=1;
-  //Serial.print("选择帧成功\r\n");
+
+//void frame::activate(){
+//  Paint_NewImage(thisframe,epaperw,epaperh,0,WHITE);
+//}
+void frame::color(UBYTE co){
+  if(co==0){
+    Color=0;
+  }else if(co==1){
+    Color=1;
+  }
 }
 void frame::clear(){
+  Color==0?Paint_SelectImage(blackframe):Paint_SelectImage(redframe);
   Paint_Clear(WHITE);
 }
 void frame::windowsclear(UWORD Xstart, UWORD Ystart, UWORD Xend, UWORD Yend, UWORD Color){
+  Color==0?Paint_SelectImage(blackframe):Paint_SelectImage(redframe);
   Paint_ClearWindows(Xstart,Ystart,Xend,Yend,Color);
 }
 void frame::point(UWORD Xpoint, UWORD Ypoint, UWORD Color=BLACK, DOT_PIXEL Dot_Pixel, DOT_STYLE Dot_FillWay){
+  Color==0?Paint_SelectImage(blackframe):Paint_SelectImage(redframe);
   Paint_DrawPoint(Xpoint,Ypoint,Color,Dot_Pixel,Dot_FillWay);
 }
 void frame::printchar(UWORD Xstart, UWORD Ystart, const char Acsii_Char, sFONT* Font,UBYTE style){
+  Color==0?Paint_SelectImage(blackframe):Paint_SelectImage(redframe);
   if(style==0){
     Paint_DrawChar(Xstart,Ystart,Acsii_Char,Font,BLACK,WHITE);
   }
@@ -151,6 +160,7 @@ void frame::printchar(UWORD Xstart, UWORD Ystart, const char Acsii_Char, sFONT* 
   }
 }
 void frame::printstr(UWORD Xstart, UWORD Ystart, const char * pString,UBYTE lang,UBYTE fontnum,UBYTE style){
+  Color==0?Paint_SelectImage(blackframe):Paint_SelectImage(redframe);
   sFONT* Fonts=&Font8;
   cFONT* Fontc=&Font24CN;
   switch(fontnum){
@@ -181,6 +191,7 @@ void frame::printstr(UWORD Xstart, UWORD Ystart, const char * pString,UBYTE lang
 }
 
 void frame::printnum(UWORD Xstart, UWORD Ystart,int32_t Nummber,UBYTE fontnum,UBYTE style){
+  Color==0?Paint_SelectImage(blackframe):Paint_SelectImage(redframe);
   sFONT* Fonts=&Font8;
   switch(fontnum){
     case 0: Fonts=&Font8;break;
@@ -199,13 +210,16 @@ void frame::printnum(UWORD Xstart, UWORD Ystart,int32_t Nummber,UBYTE fontnum,UB
   }
 }
 void frame::printpicH(const unsigned char* image_buffer){
+  Color==0?Paint_SelectImage(blackframe):Paint_SelectImage(redframe);
   Paint_DrawBitMap(image_buffer);
 }
 void frame::printpicP(const unsigned char *image_buffer, UWORD xStart, UWORD yStart, UWORD W_Image, UWORD H_Image){
+  Color==0?Paint_SelectImage(blackframe):Paint_SelectImage(redframe);
   Paint_DrawImage(image_buffer,xStart,yStart,W_Image,H_Image);
 }
 
 void frame::printtime(UWORD Xstart, UWORD Ystart, tm *pTime,int fontnum,int style){
+  Color==0?Paint_SelectImage(blackframe):Paint_SelectImage(redframe);
   sFONT* Fonts=&Font8;
   switch(fontnum){
     case 0: Fonts=&Font8;break;
@@ -223,16 +237,16 @@ void frame::printtime(UWORD Xstart, UWORD Ystart, tm *pTime,int fontnum,int styl
   }
 }
 
-//void frame::display(){
-  //EPD_7IN5B_V2_Display(thisframe,thisframe);
+void frame::display(){
+  EPD_7IN5B_V2_Display(blackframe,redframe);
   //Serial.print("打印帧成功\r\n");
-//}
-//显示函数,接受两个frame分别代表红黑通道
-void Display(frame &blackframe,frame &redframe){
-  EPD_7IN5B_V2_Display(blackframe.thisframe,redframe.thisframe);
 }
+//显示函数,接受两个frame分别代表红黑通道
+//void Display(frame &blackframe,frame &redframe){
+//  EPD_7IN5B_V2_Display(blackframe.thisframe,redframe.thisframe);
+//}
 
-/*************按钮模块 ***********************************/
+/*************按钮模块 ************** *********************/
 bool Button::isPressed(){
   if(digitalRead(pin)){
       delay(debounceDelay);

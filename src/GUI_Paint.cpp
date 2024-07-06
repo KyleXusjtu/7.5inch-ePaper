@@ -188,12 +188,9 @@ parameter:
     Ypoint : At point Y
     Color  : Painted colors
 ******************************************************************************/
-void Paint_SetPixel(UWORD Xp, UWORD Yp, UWORD Color)
+void Paint_SetPixel(UWORD Xpoint, UWORD Ypoint, UWORD Color)
 {
-    UWORD Xpoint=epaperw-Xp;
-    UWORD Ypoint=epaperh-Yp;
-    //为了统一图片和文字方向旋转坐标轴
-    if(Xp > Paint.Width || Yp > Paint.Height){
+    if(Xpoint > Paint.Width || Ypoint > Paint.Height){
         Debug("Exceeding display boundaries\r\n");
         return;
     }      
