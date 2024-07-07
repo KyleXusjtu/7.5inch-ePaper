@@ -31,7 +31,8 @@ gImage_cat2[],
 gImage_1[],
 gImage_2[],
 gImage_3[],
-gImage_4[]
+gImage_4[],
+gImage_starrynight606480[];
 ;
 
 

@@ -12,21 +12,19 @@ String weathercity="上海";//修改天气位置
 
 //wifi连接,请在511.cpp中更改ssid和password
 void wificonnect(){
-    //Serial.println("Connecting to    ");
-    //Serial.print(ssid);
+    Serial.println("Connecting to    ");
+    Serial.print(ssid);
     WiFi.begin(ssid,password);
     while (WiFi.status()!=WL_CONNECTED){
-        digitalWrite(LED_GPIO,HIGH);
         delay(500);
-        //Serial.print('.');
-        digitalWrite(LED_GPIO,LOW); 
+        Serial.print('.');
         delay(500); 
     }
-    // Serial.println();
-    // Serial.println("WiFi connected");
-    // Serial.println("IP address:");
-    // Serial.print(WiFi.localIP());
-    // Serial.println();
+     Serial.println();
+     Serial.println("WiFi connected");
+     Serial.println("IP address:");
+     Serial.print(WiFi.localIP());
+     Serial.println();
 }
 
 //通过API获得最新北京时间戳,更新RTC模块
@@ -35,15 +33,15 @@ void setTime(){
   HTTPClient http;
   //http.begin(url+"?city="+city+"&key="+key);
   bool isgettime=1;
-  //Serial.print("联网获取时间中\r\n");
+  Serial.print("联网获取时间中\r\n");
   while(isgettime){
     http.begin("http://apis.juhe.cn/fapigx/worldtime/query?key=91e19239e8956af5027136df3c5cfe64&city=上海");
     int http_code=http.GET();
     if(http_code==200){
       isgettime=0;
-      //Serial.print("获取成功\r\n");
+      Serial.print("获取成功\r\n");
     }else{
-      //Serial.print("获取失败,十秒后重新请求\r\n");
+      Serial.print("获取失败,十秒后重新请求\r\n");
     }
     delay(10000);
   }
@@ -58,7 +56,7 @@ void setTime(){
   struct timeval tv={.tv_sec=nowtime};
   settimeofday(&tv,NULL);
   doc.clear();
-  //Serial.print("时间联网设置成功\r\n");
+  Serial.print("时间联网设置成功\r\n");
 }
 
 //联网获取天气情况,n<=5为往后预报的天数,记得deleteWeather
@@ -139,7 +137,7 @@ void frame::color(UBYTE co){
   }
 }
 void frame::clear(){
-  Color==0?Paint_SelectImage(blackframe):Paint_SelectImage(redframe);
+  Color==0?(Paint_SelectImage(blackframe)):(Paint_SelectImage(redframe));
   Paint_Clear(WHITE);
 }
 void frame::windowsclear(UWORD Xstart, UWORD Ystart, UWORD Xend, UWORD Yend, UWORD Color){
@@ -159,6 +157,11 @@ void frame::printchar(UWORD Xstart, UWORD Ystart, const char Acsii_Char, sFONT* 
     Paint_DrawChar(Xstart,Ystart,Acsii_Char,Font,WHITE,BLACK);
   }
 }
+/*lang=0英文模式(默认),lang=1中英文模式(建议)*/
+/***|字体对照表(fontnum)|:
+英文:|0-font8(默认)|1-font12|2-font16|3-font20|4-font24|
+中文:|0-font24CN(默认)|1-font12CN|*/
+/*style=0白底黑字(默认),style=1黑底白字*/
 void frame::printstr(UWORD Xstart, UWORD Ystart, const char * pString,UBYTE lang,UBYTE fontnum,UBYTE style){
   Color==0?Paint_SelectImage(blackframe):Paint_SelectImage(redframe);
   sFONT* Fonts=&Font8;
@@ -190,18 +193,8 @@ void frame::printstr(UWORD Xstart, UWORD Ystart, const char * pString,UBYTE lang
   }
 }
 
-void frame::printnum(UWORD Xstart, UWORD Ystart,int32_t Nummber,UBYTE fontnum,UBYTE style){
+void frame::printnum(UWORD Xstart, UWORD Ystart,int32_t Nummber,sFONT *Fonts,UBYTE style){
   Color==0?Paint_SelectImage(blackframe):Paint_SelectImage(redframe);
-  sFONT* Fonts=&Font8;
-  switch(fontnum){
-    case 0: Fonts=&Font8;break;
-    case 1: Fonts=&Font12;break;
-    case 2: Fonts=&Font16;break;
-    case 3: Fonts=&Font20;break;
-    case 4: Fonts=&Font24;break;
-    case 5: Fonts=&Font48B;break;
-    default:;
-  } 
   if(style==0){
    Paint_DrawNum(Xstart,Ystart,Nummber,Fonts,BLACK,WHITE);
   }
@@ -218,22 +211,12 @@ void frame::printpicP(const unsigned char *image_buffer, UWORD xStart, UWORD ySt
   Paint_DrawImage(image_buffer,xStart,yStart,W_Image,H_Image);
 }
 
-void frame::printtime(UWORD Xstart, UWORD Ystart, tm *pTime,int fontnum,int style){
+void frame::printtime(UWORD Xstart, UWORD Ystart, tm &pTime,sFONT *Fonts,int style){
   Color==0?Paint_SelectImage(blackframe):Paint_SelectImage(redframe);
-  sFONT* Fonts=&Font8;
-  switch(fontnum){
-    case 0: Fonts=&Font8;break;
-    case 1: Fonts=&Font12;break;
-    case 2: Fonts=&Font16;break;
-    case 3: Fonts=&Font20;break;
-    case 4: Fonts=&Font24;break;
-    case 5: Fonts=&Font48B;break;
-    default:;
-  }
   if(style==0){
-    Paint_DrawTime(Xstart,Ystart,pTime,Fonts,WHITE,BLACK);
+    Paint_DrawTime(Xstart,Ystart,&pTime,Fonts,WHITE,BLACK);
   }else{
-    Paint_DrawTime(Xstart,Ystart,pTime,Fonts,BLACK,WHITE);
+    Paint_DrawTime(Xstart,Ystart,&pTime,Fonts,BLACK,WHITE);
   }
 }
 

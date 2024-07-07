@@ -269,6 +269,7 @@ parameter:
 void Paint_Clear(UWORD Color)
 {
     if(Paint.Scale == 2) {
+
 		for (UWORD Y = 0; Y < Paint.HeightByte; Y++) {
 			for (UWORD X = 0; X < Paint.WidthByte; X++ ) {//8 pixel =  1 byte
 				UDOUBLE Addr = X + Y*Paint.WidthByte;
@@ -786,7 +787,7 @@ void Paint_DrawBitMap(const unsigned char* image_buffer)
     for (y = 0; y < Paint.HeightByte; y++) {
         for (x = 0; x < Paint.WidthByte; x++) {//8 pixel =  1 byte
             Addr = x + y * Paint.WidthByte;
-            Paint.Image[Addr] = (unsigned char)image_buffer[Addr];
+            Paint.Image[Addr] = ~(unsigned char)image_buffer[Addr];
         }
     }
 }
@@ -810,7 +811,7 @@ void Paint_DrawImage(const unsigned char *image_buffer, UWORD xStart, UWORD ySta
         for (x = 0; x < w_byte; x++) {//8 pixel =  1 byte
             Addr = x + y * w_byte;
 			pAddr=x+(xStart/8)+((y+yStart)*Paint.WidthByte);
-            Paint.Image[pAddr] = (unsigned char)image_buffer[Addr];
+            Paint.Image[pAddr] = ~(unsigned char)image_buffer[Addr];
         }
     }
 }
