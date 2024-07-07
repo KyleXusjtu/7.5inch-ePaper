@@ -79,6 +79,8 @@ typedef struct
   
 }cFONT;
 
+extern sFONT Font72B;
+extern sFONT Font36B;
 extern sFONT Font48B;
 extern sFONT Font24;
 extern sFONT Font20;

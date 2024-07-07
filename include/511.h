@@ -91,11 +91,16 @@
             void color(UBYTE co);
             void clear();
             void windowsclear(UWORD Xstart, UWORD Ystart, UWORD Xend, UWORD Yend, UWORD Color=WHITE);
-            void point(UWORD Xpoint, UWORD Ypoint, UWORD Color, DOT_PIXEL Dot_Pixel=DOT_PIXEL_1X1, DOT_STYLE Dot_FillWay=DOT_FILL_RIGHTUP);
+            //style=0实心(默认),style=1空心
+            void printpoint(UWORD Xpoint, UWORD Ypoint, UWORD Color,UBYTE width=1,UBYTE style=0);
             
             //style=0白底黑字,style=1黑底白字
             void printchar(UWORD Xstart, UWORD Ystart, const char Acsii_Char, sFONT* Font,UBYTE style=0);
             
+            //style=0实线(默认),style=1虚线
+            void printline(UWORD Xstart, UWORD Ystart, UWORD Xend, UWORD Yend, UBYTE width=1,UBYTE style=0);
+            //style=0空心(默认),style=1填充
+            void printrec(UWORD Xstart, UWORD Ystart, UWORD Xend, UWORD Yend, UBYTE width=1,UBYTE style=0);
 
             void printstr(UWORD Xstart, UWORD Ystart, const char * pString,UBYTE lang=0,UBYTE fontnum=0,UBYTE style=0);
             

@@ -11,6 +11,34 @@ int menupage=0;
 bool isopen=0;
 bool runonce=1;
 
+void calendar(frame &pg){
+  pg.color(black);
+  pg.clear();
+  pg.printpicH(gImage_StarrynightF);//starrynight
+  pg.printtime(160,0,timeinfo,&Font36B,0);
+  String month="一月";
+  String city="上海";
+  switch(timeinfo.tm_mon){
+    case 0:month="一月";break;case 1:month="二月";break;case 2:month="三月";break;case 3:month="四月";break;case 4:month="五月";break;case 5:month="六月";break;case 6:month="七月";break;case 7:month="八月";break;case 8:month="九月";break;case 9:month="十月";break;case 10:month="十一月";break;case 11:month="十二月";break;
+    default:;
+  }
+  pg.printstr(160,70,city.c_str(),1);
+  pg.printline(0,150,320,150,5,1);
+  //===
+  pg.color(red);
+  pg.clear();
+  if(timeinfo.tm_mday<10){        
+      pg.printchar(10,0,'0',&Font72B);
+      pg.printnum(74,0,timeinfo.tm_mday,&Font72B);
+  }else{
+      pg.printnum(10,0,timeinfo.tm_mday,&Font72B);
+  }
+  pg.printline(10,130,10+64*2,130,5);
+  //===
+  pg.display();
+}
+
+
 /* setup --------------------------------------------------------------------*/
 void setup()
 {
@@ -28,7 +56,7 @@ void setup()
         pg.clear();
         pg.printstr(epaperw/2-16*14/2,epaperh/2+20,"Powered by 511.h",0,3);
         pg.display();
-        SleepMode();
+        //SleepMode();
         isopen=1;
         wificonnect();
         setTime();
@@ -51,27 +79,19 @@ void setup()
     if(isopen){
       getTime(timeinfo);
       if(runonce){ 
-        epaperinit();
-        pg.color(black);
-        pg.clear();
-        pg.printpicP(gImage_starrynight606480,194,0,606,480);
-        pg.color(red);
-        pg.clear();
-        pg.printtime(0,0,timeinfo,&Font48B,0);
-        pg.display();
+        //epaperinit();
+        //---
+        calendar(pg);
+        //---
         runonce=0;
         SleepMode();
       }
 
       if(timeinfo.tm_sec==0){
         epaperinit();
-        pg.color(black);
-        pg.clear();
-        pg.printpicP(gImage_starrynight606480,194,0,606,480);
-        pg.color(red);
-        pg.clear();
-        pg.printtime(0,0,timeinfo,&Font48B,0);
-        pg.display();
+        //---
+        calendar(pg);
+        //---
         SleepMode();
         runonce=0;
       }

@@ -144,9 +144,65 @@ void frame::windowsclear(UWORD Xstart, UWORD Ystart, UWORD Xend, UWORD Yend, UWO
   Color==0?Paint_SelectImage(blackframe):Paint_SelectImage(redframe);
   Paint_ClearWindows(Xstart,Ystart,Xend,Yend,Color);
 }
-void frame::point(UWORD Xpoint, UWORD Ypoint, UWORD Color=BLACK, DOT_PIXEL Dot_Pixel, DOT_STYLE Dot_FillWay){
+void frame::printpoint(UWORD Xpoint, UWORD Ypoint, UWORD Color=BLACK,UBYTE width,UBYTE style){
   Color==0?Paint_SelectImage(blackframe):Paint_SelectImage(redframe);
-  Paint_DrawPoint(Xpoint,Ypoint,Color,Dot_Pixel,Dot_FillWay);
+  DOT_PIXEL Dot_Pixel;
+  switch(width){
+    case 1:Dot_Pixel=DOT_PIXEL_1X1;break;
+    case 2:Dot_Pixel=DOT_PIXEL_2X2;break;
+    case 3:Dot_Pixel=DOT_PIXEL_3X3;break;
+    case 4:Dot_Pixel=DOT_PIXEL_4X4;break;
+    case 5:Dot_Pixel=DOT_PIXEL_5X5;break;
+    case 6:Dot_Pixel=DOT_PIXEL_6X6;break;
+    case 7:Dot_Pixel=DOT_PIXEL_7X7;break;
+    case 8:Dot_Pixel=DOT_PIXEL_8X8;break;
+    default:;
+  }
+  if(style==0){
+    Paint_DrawPoint(Xpoint,Ypoint,Color,Dot_Pixel,DOT_FILL_RIGHTUP);
+  }else{
+    Paint_DrawPoint(Xpoint,Ypoint,Color,Dot_Pixel,DOT_FILL_AROUND);
+  }
+}
+void frame::printline(UWORD Xstart, UWORD Ystart, UWORD Xend, UWORD Yend, UBYTE width,UBYTE style){
+  Color==0?Paint_SelectImage(blackframe):Paint_SelectImage(redframe);
+  DOT_PIXEL Line_width;
+  switch(width){
+    case 1:Line_width=DOT_PIXEL_1X1;break;
+    case 2:Line_width=DOT_PIXEL_2X2;break;
+    case 3:Line_width=DOT_PIXEL_3X3;break;
+    case 4:Line_width=DOT_PIXEL_4X4;break;
+    case 5:Line_width=DOT_PIXEL_5X5;break;
+    case 6:Line_width=DOT_PIXEL_6X6;break;
+    case 7:Line_width=DOT_PIXEL_7X7;break;
+    case 8:Line_width=DOT_PIXEL_8X8;break;
+    default:;
+  }
+  if(style==0){
+    Paint_DrawLine(Xstart,Ystart,Xend,Yend,BLACK,Line_width,LINE_STYLE_SOLID);
+  }else{
+    Paint_DrawLine(Xstart,Ystart,Xend,Yend,BLACK,Line_width,LINE_STYLE_DOTTED);
+  }
+}
+void frame::printrec(UWORD Xstart, UWORD Ystart, UWORD Xend, UWORD Yend, UBYTE width,UBYTE style){
+  Color==0?Paint_SelectImage(blackframe):Paint_SelectImage(redframe);
+  DOT_PIXEL Line_width;
+  switch(width){
+    case 1:Line_width=DOT_PIXEL_1X1;break;
+    case 2:Line_width=DOT_PIXEL_2X2;break;
+    case 3:Line_width=DOT_PIXEL_3X3;break;
+    case 4:Line_width=DOT_PIXEL_4X4;break;
+    case 5:Line_width=DOT_PIXEL_5X5;break;
+    case 6:Line_width=DOT_PIXEL_6X6;break;
+    case 7:Line_width=DOT_PIXEL_7X7;break;
+    case 8:Line_width=DOT_PIXEL_8X8;break;
+    default:;
+  }
+  if(style==0){
+    Paint_DrawRectangle(Xstart,Ystart,Xend,Yend,BLACK,Line_width,DRAW_FILL_EMPTY);
+  }else{
+    Paint_DrawRectangle(Xstart,Ystart,Xend,Yend,BLACK,Line_width,DRAW_FILL_FULL);
+  } 
 }
 void frame::printchar(UWORD Xstart, UWORD Ystart, const char Acsii_Char, sFONT* Font,UBYTE style){
   Color==0?Paint_SelectImage(blackframe):Paint_SelectImage(redframe);
