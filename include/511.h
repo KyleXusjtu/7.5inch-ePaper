@@ -50,11 +50,11 @@
     struct Weather{
         String city;
         String info;//天气情况,预报和实时都有
-        int8_t temp;
-        int8_t humidity;
-        int8_t aqi;
+        int16_t temp;
+        int16_t humidity;
+        int16_t aqi;
         Weather *nextday;
-        String predictday;String daytemp;//仅预报有   
+        String predictday;String predictdaytemp;//仅预报有   
     };
     void wificonnect();
     void setTime();
@@ -87,7 +87,7 @@
                 redframe=NULL;
                 //Serial.print("删除帧成功\r\n");
             }
-
+            //black=0,red=1
             void color(UBYTE co);
             void clear();
             void windowsclear(UWORD Xstart, UWORD Ystart, UWORD Xend, UWORD Yend, UWORD Color=WHITE);
@@ -140,5 +140,11 @@
                 }
             bool isPressed();
     };
+//framework related functions
 
+bool isleapYear(uint16_t y);
+uint16_t whatDay(uint16_t year,uint16_t month);
+
+//打印一个月历 font16:297*160(192)
+void printcalendar(UWORD Xstart,UWORD Ystart,frame &pg,tm &timeinfo);
 #endif

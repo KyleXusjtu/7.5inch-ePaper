@@ -33,13 +33,13 @@ void setTime(){
   HTTPClient http;
   //http.begin(url+"?city="+city+"&key="+key);
   bool isgettime=1;
-  Serial.print("联网获取时间中\r\n");
+  //Serial.print("联网获取时间中\r\n");
   while(isgettime){
     http.begin("http://apis.juhe.cn/fapigx/worldtime/query?key=91e19239e8956af5027136df3c5cfe64&city=上海");
     int http_code=http.GET();
     if(http_code==200){
       isgettime=0;
-      Serial.print("获取成功\r\n");
+      //Serial.print("获取成功\r\n");
     }else{
       Serial.print("获取失败,十秒后重新请求\r\n");
     }
@@ -56,7 +56,7 @@ void setTime(){
   struct timeval tv={.tv_sec=nowtime};
   settimeofday(&tv,NULL);
   doc.clear();
-  Serial.print("时间联网设置成功\r\n");
+  //Serial.print("时间联网设置成功\r\n");
 }
 
 //联网获取天气情况,n<=5为往后预报的天数,记得deleteWeather
@@ -71,9 +71,9 @@ void getWeather(Weather &weather,int n){
       isgetweather=0;
       //Serial.print("获取成功\r\n");
     }else{
-      //Serial.print("获取失败,十秒后重新请求\r\n");
+      Serial.print("获取失败,十秒后重新请求\r\n");
     }
-    delay(10000);
+    delay(1000);
   }
   String weatherresponse=http.getString();
   http.end();
@@ -87,9 +87,9 @@ void getWeather(Weather &weather,int n){
   q=p;
   weather.city=doc["result"]["city"].as<String>();
   weather.info=doc["result"]["realtime"]["info"].as<String>();
-  weather.temp=doc["result"]["realtime"]["temperature"].as<int8_t>();
-  weather.humidity=doc["result"]["realtime"]["humidity"].as<int8_t>();
-  weather.aqi=doc["result"]["realtime"]["aqi"].as<int8_t>();
+  weather.temp=doc["result"]["realtime"]["temperature"].as<int16_t>();
+  weather.humidity=doc["result"]["realtime"]["humidity"].as<int16_t>();
+  weather.aqi=doc["result"]["realtime"]["aqi"].as<int16_t>();
   //仅获取后两天的预报天气
   for(int i=0;i<n;i++){
     p=new Weather;
@@ -97,7 +97,7 @@ void getWeather(Weather &weather,int n){
     q=p;
     q->predictday=doc["result"]["future"][i]["date"].as<String>();
     q->info=doc["result"]["future"][i]["weather"].as<String>();
-    q->daytemp=doc["result"]["future"][i]["temperature"].as<String>();
+    q->predictdaytemp=doc["result"]["future"][i]["temperature"].as<String>();
   }
   doc.clear();
   //Serial.print("天气联网设置成功\r\n");
@@ -129,6 +129,7 @@ void getTime(tm &timeinfo_get){
 //void frame::activate(){
 //  Paint_NewImage(thisframe,epaperw,epaperh,0,WHITE);
 //}
+
 void frame::color(UBYTE co){
   if(co==0){
     Color=0;
@@ -299,4 +300,65 @@ bool Button::isPressed(){
     status=false;
   }
   return 0;
+}
+
+/*************排版相关函数 **********************************/
+
+bool isleapYear(uint16_t y){
+    if (y%4==0 && y%100 !=0 || y%400==0 ) return 1;
+    return 0;
+}
+ 
+uint16_t whatDay(uint16_t year,uint16_t month){
+    int dyear=0,nd=0,w,lyear=0;
+    if (year==1) nd = 0 ; else {
+        for (int i=1;i<year;i++) {
+            if (isleapYear(i)) lyear+=1;
+            else dyear+=1;
+        }
+        nd=dyear*365+lyear*366;
+    }
+    if (month==1) nd+=1; else {
+        int monthl[]={1,31,0,31,30,31,30,31,31,30,31,30,31};
+        for (int j=0;j<=month-1;j++) {
+            nd+=monthl[j];
+        }
+    if (isleapYear(year) && month >=3 ) nd+=29;
+    if (isleapYear(year)==0 && month >=3 ) nd+=28;
+    }
+    w=0;
+    w+=nd;
+    w=w%7;
+    if (w==0) w=7;
+    return w;
+}
+
+void printcalendar(UWORD Xstart,UWORD Ystart,frame &pg,tm &timeinfo){
+  uint8_t fontw=11;
+  uint8_t fonth=16;
+  uint8_t months[12]={31,0,31,30,31,30,31,31,30,31,30,31};
+  isleapYear(timeinfo.tm_year)?months[1]=29:months[1]=28;
+  pg.color(black);
+  pg.printstr(Xstart,Ystart,"MON TUE WED THU FRI SAT SUN",0,2,0);
+  uint8_t fweek=whatDay(timeinfo.tm_year+1900,timeinfo.tm_mon+1);
+  uint16_t Xshift=(1+4*(fweek-2))*fontw;
+  uint16_t Yshift=fonth*1;
+
+  for(int i=1;i<=months[timeinfo.tm_mon];i++){
+    Xshift+=4*fontw;
+    if((fweek-2+i)%7==0){
+      Yshift+=fonth*2;
+      Xshift=1*fontw;
+    }
+    if(i==timeinfo.tm_mday){
+      pg.color(red);
+      pg.printnum(Xstart+Xshift,Ystart+Yshift,i,&Font16,1);
+      
+    }else{
+      pg.color(black);
+      pg.printnum(Xstart+Xshift,Ystart+Yshift,i,&Font16,0);
+    }
+    
+  }
+
 }

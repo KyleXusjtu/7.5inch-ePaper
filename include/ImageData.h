@@ -25,7 +25,14 @@
 
 //关联imagebuffer
 extern const unsigned char 
-gImage_StarrynightF[]
+gImage_0[],
+gImage_1[],
+gImage_2a[],
+gImage_2b[],
+gImage_3[],
+gImage_4[],
+gImage_5a[],
+gImage_5b[]
 
 ;
 
