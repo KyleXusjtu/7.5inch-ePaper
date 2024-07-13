@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+    <html>
+        <head>
+            <meta charset="utf-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <title></title>
+            <meta name="description" content="">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <link rel="stylesheet" href="">
+        </head>
+        <body>
+            <h1>Hello world!</h1>
+            <!-- 两个按钮 -->
+            <button onmousedown=sw('on')>开灯</button>
+            <button onmousedown=sw('off')>关灯</button>
+            <!-- script里面写函数和js -->
+            <script>
+                var xhttp=new XMLHttpRequest();
+                function sw(arg){
+                    xhttp.open('GET','/sw?led='+arg,true);// 请求类别,地址,是否异步
+                
+                }
+            </script>
+        </body>
+    </html>

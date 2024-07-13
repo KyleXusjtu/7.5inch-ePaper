@@ -27,6 +27,7 @@
     #include <time.h>
     #include <WiFi.h>
     #include <HTTPClient.h>
+    #include <WebServer.h>
     #include <ArduinoJson.h>
     #include <stdlib.h>
     #include <cstring>
@@ -140,6 +141,10 @@
                 }
             bool isPressed();
     };
+
+
+    extern Button beginB;
+    extern Button nextB;
 //framework related functions
 
 bool isleapYear(uint16_t y);

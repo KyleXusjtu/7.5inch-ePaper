@@ -302,6 +302,10 @@ bool Button::isPressed(){
   return 0;
 }
 
+  Button beginB(beginb_GPIO);//开机/关机按钮
+  Button nextB(nextb_GPIO);//next按钮
+  //Button confirmB(confirmb_GPIO);//确认按钮
+
 /*************排版相关函数 **********************************/
 
 bool isleapYear(uint16_t y){
