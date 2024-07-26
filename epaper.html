@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>EpaperSetup</title>
+</head>
+<body>
+    <h1>Welcome to Epaper511</h1>
+    <button onclick='sw(1)'>开机</button>
+    <button onclick='sw(0)'>关机</button>
+    <br>
+    <br>
+    <span style='color: yellowgreen; font-size: larger;''>请先进行配网:</span>
+    <form action='' method='get' style="display: inline-block;">
+        <label for='ssid'>WiFi名:</label>
+        <input type='text' name='ssid' id='' placeholder='input wifi ssid'>
+        <label for='password'>密码:</label>
+        <input type='text' name='password' placeholder='input wifi password'>
+        <input type='submit'>
+    </form>
+    <button onclick="wifiset()">配网并断开连接</button>
+    <script>
+        let xhttp=new XMLHttpRequest();
+        function sw(key) {
+            if(key==1){
+                xhttp.open('GET','?switch=on',true);
+                xhttp.send();
+            }else if(key==0){
+                xhttp.open('GET','?switch=off',true);
+                xhttp.send();
+            }
+        }
+        function wifiset(){
+            xhttp.open('GET','?wifiset=on');
+            xhttp.send();
+        }
+    </script>
+</body>
+</html>

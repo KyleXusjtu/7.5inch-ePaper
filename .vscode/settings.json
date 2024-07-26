@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "200_200.C": "cpp"
+        "200_200.C": "cpp",
+        "functional": "cpp"
     }
 }

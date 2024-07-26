@@ -57,7 +57,7 @@
         Weather *nextday;
         String predictday;String predictdaytemp;//仅预报有   
     };
-    void wificonnect();
+    void wificonnect(String ssid,String password);
     void setTime();
     void getTime(tm &timeinfo_get);
     void getWeather(Weather &weather,int n);
@@ -120,6 +120,7 @@
             //打印帧,包括红黑通道          
             void display();
     };
+    //extern frame pg;
     //void Display(frame &blackframe,frame &redframe);
 
 //button related function-----
@@ -145,6 +146,7 @@
 
     extern Button beginB;
     extern Button nextB;
+
 //framework related functions
 
 bool isleapYear(uint16_t y);
@@ -152,4 +154,9 @@ uint16_t whatDay(uint16_t year,uint16_t month);
 
 //打印一个月历 font16:297*160(192)
 void printcalendar(UWORD Xstart,UWORD Ystart,frame &pg,tm &timeinfo);
+
+//pg related function
+void calendar(frame &pg);
+
+
 #endif
