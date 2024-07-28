@@ -24,10 +24,13 @@
     #include"GUI_Paint.h"
     #include"ImageData.h"
     #include"fonts.h"
+    #include "SPIFFS.h"
     #include <time.h>
     #include <WiFi.h>
     #include <HTTPClient.h>
-    #include <WebServer.h>
+    //#include <WebServer.h>
+    #include <ESPAsyncWebServer.h>
+    #include <AsyncTCP.h>
     #include <ArduinoJson.h>
     #include <stdlib.h>
     #include <cstring>
@@ -57,7 +60,7 @@
         Weather *nextday;
         String predictday;String predictdaytemp;//仅预报有   
     };
-    void wificonnect(String ssid,String password);
+    bool wificonnect(String ssid,String password);
     void setTime();
     void getTime(tm &timeinfo_get);
     void getWeather(Weather &weather,int n);

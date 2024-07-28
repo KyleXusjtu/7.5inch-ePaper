@@ -13,23 +13,23 @@ String weatherurl = "http://apis.juhe.cn/simpleWeather/query";
 String weathercity = "上海"; // 修改天气位置
 // String key="ef670a1bc22e8ac69bdb5cd12716bd39";
 
-// wifi连接,请在511.cpp中更改ssid和password
-void wificonnect(String ssid, String password)
+
+bool wificonnect(String ssid, String password)
 {
   Serial.println("Connecting to    ");
   Serial.print(ssid);
+  WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
-  while (WiFi.status() != WL_CONNECTED)
+  if (WiFi.waitForConnectResult(3000) != WL_CONNECTED)
   {
-    delay(500);
-    Serial.print('.');
-    delay(500);
+    Serial.println("WiFi Failed!");
+    return 0;
   }
-  Serial.println();
-  Serial.println("WiFi connected");
-  Serial.println("IP address:");
-  Serial.print(WiFi.localIP());
-  Serial.println();
+
+  Serial.println("Connection sucessful");
+  Serial.print("IP Address: ");
+  Serial.println(WiFi.localIP());
+  return 1;
 }
 
 // 通过API获得最新北京时间戳,更新RTC模块
