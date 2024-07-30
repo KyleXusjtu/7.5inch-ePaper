@@ -141,274 +141,6 @@ void getTime(tm &timeinfo_get)
   localtime_r(&now_get, &timeinfo_get);
 }
 
-/*************绘图模块 ***********************************/
-// 选择帧(打印未选择的帧会导致花屏!)
-
-// void frame::activate(){
-//   Paint_NewImage(thisframe,epaperw,epaperh,0,WHITE);
-// }
-
-void frame::color(UBYTE co)
-{
-  if (co == 0)
-  {
-    Color = 0;
-  }
-  else if (co == 1)
-  {
-    Color = 1;
-  }
-}
-void frame::clear()
-{
-  Color == 0 ? (Paint_SelectImage(blackframe)) : (Paint_SelectImage(redframe));
-  Paint_Clear(WHITE);
-}
-void frame::windowsclear(UWORD Xstart, UWORD Ystart, UWORD Xend, UWORD Yend, UWORD Color)
-{
-  Color == 0 ? Paint_SelectImage(blackframe) : Paint_SelectImage(redframe);
-  Paint_ClearWindows(Xstart, Ystart, Xend, Yend, Color);
-}
-void frame::printpoint(UWORD Xpoint, UWORD Ypoint, UWORD Color = BLACK, UBYTE width, UBYTE style)
-{
-  Color == 0 ? Paint_SelectImage(blackframe) : Paint_SelectImage(redframe);
-  DOT_PIXEL Dot_Pixel;
-  switch (width)
-  {
-  case 1:
-    Dot_Pixel = DOT_PIXEL_1X1;
-    break;
-  case 2:
-    Dot_Pixel = DOT_PIXEL_2X2;
-    break;
-  case 3:
-    Dot_Pixel = DOT_PIXEL_3X3;
-    break;
-  case 4:
-    Dot_Pixel = DOT_PIXEL_4X4;
-    break;
-  case 5:
-    Dot_Pixel = DOT_PIXEL_5X5;
-    break;
-  case 6:
-    Dot_Pixel = DOT_PIXEL_6X6;
-    break;
-  case 7:
-    Dot_Pixel = DOT_PIXEL_7X7;
-    break;
-  case 8:
-    Dot_Pixel = DOT_PIXEL_8X8;
-    break;
-  default:;
-  }
-  if (style == 0)
-  {
-    Paint_DrawPoint(Xpoint, Ypoint, Color, Dot_Pixel, DOT_FILL_RIGHTUP);
-  }
-  else
-  {
-    Paint_DrawPoint(Xpoint, Ypoint, Color, Dot_Pixel, DOT_FILL_AROUND);
-  }
-}
-void frame::printline(UWORD Xstart, UWORD Ystart, UWORD Xend, UWORD Yend, UBYTE width, UBYTE style)
-{
-  Color == 0 ? Paint_SelectImage(blackframe) : Paint_SelectImage(redframe);
-  DOT_PIXEL Line_width;
-  switch (width)
-  {
-  case 1:
-    Line_width = DOT_PIXEL_1X1;
-    break;
-  case 2:
-    Line_width = DOT_PIXEL_2X2;
-    break;
-  case 3:
-    Line_width = DOT_PIXEL_3X3;
-    break;
-  case 4:
-    Line_width = DOT_PIXEL_4X4;
-    break;
-  case 5:
-    Line_width = DOT_PIXEL_5X5;
-    break;
-  case 6:
-    Line_width = DOT_PIXEL_6X6;
-    break;
-  case 7:
-    Line_width = DOT_PIXEL_7X7;
-    break;
-  case 8:
-    Line_width = DOT_PIXEL_8X8;
-    break;
-  default:;
-  }
-  if (style == 0)
-  {
-    Paint_DrawLine(Xstart, Ystart, Xend, Yend, BLACK, Line_width, LINE_STYLE_SOLID);
-  }
-  else
-  {
-    Paint_DrawLine(Xstart, Ystart, Xend, Yend, BLACK, Line_width, LINE_STYLE_DOTTED);
-  }
-}
-void frame::printrec(UWORD Xstart, UWORD Ystart, UWORD Xend, UWORD Yend, UBYTE width, UBYTE style)
-{
-  Color == 0 ? Paint_SelectImage(blackframe) : Paint_SelectImage(redframe);
-  DOT_PIXEL Line_width;
-  switch (width)
-  {
-  case 1:
-    Line_width = DOT_PIXEL_1X1;
-    break;
-  case 2:
-    Line_width = DOT_PIXEL_2X2;
-    break;
-  case 3:
-    Line_width = DOT_PIXEL_3X3;
-    break;
-  case 4:
-    Line_width = DOT_PIXEL_4X4;
-    break;
-  case 5:
-    Line_width = DOT_PIXEL_5X5;
-    break;
-  case 6:
-    Line_width = DOT_PIXEL_6X6;
-    break;
-  case 7:
-    Line_width = DOT_PIXEL_7X7;
-    break;
-  case 8:
-    Line_width = DOT_PIXEL_8X8;
-    break;
-  default:;
-  }
-  if (style == 0)
-  {
-    Paint_DrawRectangle(Xstart, Ystart, Xend, Yend, BLACK, Line_width, DRAW_FILL_EMPTY);
-  }
-  else
-  {
-    Paint_DrawRectangle(Xstart, Ystart, Xend, Yend, BLACK, Line_width, DRAW_FILL_FULL);
-  }
-}
-void frame::printchar(UWORD Xstart, UWORD Ystart, const char Acsii_Char, sFONT *Font, UBYTE style)
-{
-  Color == 0 ? Paint_SelectImage(blackframe) : Paint_SelectImage(redframe);
-  if (style == 0)
-  {
-    Paint_DrawChar(Xstart, Ystart, Acsii_Char, Font, BLACK, WHITE);
-  }
-  else
-  {
-    Paint_DrawChar(Xstart, Ystart, Acsii_Char, Font, WHITE, BLACK);
-  }
-}
-/*lang=0英文模式(默认),lang=1中英文模式(建议)*/
-/***|字体对照表(fontnum)|:
-英文:|0-font8(默认)|1-font12|2-font16|3-font20|4-font24|
-中文:|0-font24CN(默认)|1-font12CN|*/
-/*style=0白底黑字(默认),style=1黑底白字*/
-void frame::printstr(UWORD Xstart, UWORD Ystart, const char *pString, UBYTE lang, UBYTE fontnum, UBYTE style)
-{
-  Color == 0 ? Paint_SelectImage(blackframe) : Paint_SelectImage(redframe);
-  sFONT *Fonts = &Font8;
-  cFONT *Fontc = &Font24CN;
-  switch (fontnum)
-  {
-  case 0:
-    Fonts = &Font8;
-    Fontc = &Font24CN;
-    break;
-  case 1:
-    Fonts = &Font12;
-    Fontc = &Font12CN;
-    break;
-  case 2:
-    Fonts = &Font16;
-    break;
-  case 3:
-    Fonts = &Font20;
-    break;
-  case 4:
-    Fonts = &Font24;
-    break;
-  case 5:
-    Fonts = &Font48B;
-    break;
-  default:;
-  }
-  if (lang == 0)
-  {
-    if (style == 0)
-    {
-      Paint_DrawString_EN(Xstart, Ystart, pString, Fonts, WHITE, BLACK);
-    }
-    else
-    {
-      Paint_DrawString_EN(Xstart, Ystart, pString, Fonts, BLACK, WHITE);
-    }
-  }
-  else if (lang == 1)
-  {
-    if (style == 0)
-    {
-      Paint_DrawString_CN(Xstart, Ystart, pString, Fontc, BLACK, WHITE);
-    }
-    else
-    {
-      Paint_DrawString_CN(Xstart, Ystart, pString, Fontc, WHITE, BLACK);
-    }
-  }
-}
-
-void frame::printnum(UWORD Xstart, UWORD Ystart, int32_t Nummber, sFONT *Fonts, UBYTE style)
-{
-  Color == 0 ? Paint_SelectImage(blackframe) : Paint_SelectImage(redframe);
-  if (style == 0)
-  {
-    Paint_DrawNum(Xstart, Ystart, Nummber, Fonts, BLACK, WHITE);
-  }
-  else
-  {
-    Paint_DrawNum(Xstart, Ystart, Nummber, Fonts, WHITE, BLACK);
-  }
-}
-void frame::printpicH(const unsigned char *image_buffer)
-{
-  Color == 0 ? Paint_SelectImage(blackframe) : Paint_SelectImage(redframe);
-  Paint_DrawBitMap(image_buffer);
-}
-void frame::printpicP(const unsigned char *image_buffer, UWORD xStart, UWORD yStart, UWORD W_Image, UWORD H_Image)
-{
-  Color == 0 ? Paint_SelectImage(blackframe) : Paint_SelectImage(redframe);
-  Paint_DrawImage(image_buffer, xStart, yStart, W_Image, H_Image);
-}
-
-void frame::printtime(UWORD Xstart, UWORD Ystart, tm &pTime, sFONT *Fonts, int style)
-{
-  Color == 0 ? Paint_SelectImage(blackframe) : Paint_SelectImage(redframe);
-  if (style == 0)
-  {
-    Paint_DrawTime(Xstart, Ystart, &pTime, Fonts, WHITE, BLACK);
-  }
-  else
-  {
-    Paint_DrawTime(Xstart, Ystart, &pTime, Fonts, BLACK, WHITE);
-  }
-}
-
-void frame::display()
-{
-  EPD_7IN5B_V2_Display(blackframe, redframe);
-  // Serial.print("打印帧成功\r\n");
-}
-// frame pg;
-// 显示函数,接受两个frame分别代表红黑通道
-// void Display(frame &blackframe,frame &redframe){
-//   EPD_7IN5B_V2_Display(blackframe.thisframe,redframe.thisframe);
-// }
-
 /*************按钮模块 ************** *********************/
 bool Button::isPressed()
 {
@@ -436,7 +168,9 @@ Button beginB(beginb_GPIO); // 开机/关机按钮
 Button nextB(nextb_GPIO);   // next按钮
 // Button confirmB(confirmb_GPIO);//确认按钮
 
-/*************排版相关函数 **********************************/
+/*************自订显示框架程式 **********************************/
+extern U8G2_FOR_ADAFRUIT_GFX ufont;
+extern GxEPD2_3C<GxEPD2_750c_Z08, GxEPD2_750c_Z08::HEIGHT / 2> epaper;
 
 bool isleapYear(uint16_t y)
 {
@@ -483,17 +217,18 @@ uint16_t whatDay(uint16_t year, uint16_t month)
   return w;
 }
 
-void printcalendar(UWORD Xstart, UWORD Ystart, frame &pg, tm &timeinfo)
+void printcalendar(int16_t Xstart, int16_t Ystart)
 {
-  uint8_t fontw = 11;
-  uint8_t fonth = 16;
+  //ufont.setFont("u8g2_font_crox1h_tr");
+  uint8_t fontw = 9;
+  uint8_t fonth = 12;
   uint8_t months[12] = {31, 0, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
   isleapYear(timeinfo.tm_year) ? months[1] = 29 : months[1] = 28;
-  pg.color(black);
-  pg.printstr(Xstart, Ystart, "MON TUE WED THU FRI SAT SUN", 0, 2, 0);
+  ufont.setCursor(Xstart, Ystart+fonth+4);
+  ufont.print("MON TUE WED THU FRI SAT SUN");
   uint8_t fweek = whatDay(timeinfo.tm_year + 1900, timeinfo.tm_mon + 1);
   uint16_t Xshift = (1 + 4 * (fweek - 2)) * fontw;
-  uint16_t Yshift = fonth * 1;
+  uint16_t Yshift = fonth * 3;
 
   for (int i = 1; i <= months[timeinfo.tm_mon]; i++)
   {
@@ -505,60 +240,75 @@ void printcalendar(UWORD Xstart, UWORD Ystart, frame &pg, tm &timeinfo)
     }
     if (i == timeinfo.tm_mday)
     {
-      pg.color(red);
-      pg.printnum(Xstart + Xshift, Ystart + Yshift, i, &Font16, 1);
+      ufont.setBackgroundColor(white);
+      ufont.setForegroundColor(red);
+      ufont.setCursor(Xstart + Xshift, Ystart + Yshift + fonth);
+      ufont.print(i);
     }
     else
     {
-      pg.color(black);
-      pg.printnum(Xstart + Xshift, Ystart + Yshift, i, &Font16, 0);
+      ufont.setBackgroundColor(white);
+      ufont.setForegroundColor(black);
+      ufont.setCursor(Xstart + Xshift, Ystart + Yshift + fonth);
+      ufont.print(i);
     }
   }
 }
-
+void printclock(uint16_t Xstart,uint16_t Ystart,tm& pTime){
+  uint16_t Dx = ufont.getFontAscent();
+  Ystart += Dx;
+  ufont.setCursor(Xstart, Ystart);
+  ufont.print(pTime.tm_hour / 10);
+  ufont.setCursor(Xstart + Dx, Ystart);
+  ufont.print(pTime.tm_hour % 10);
+  ufont.setCursor(Xstart + Dx*2, Ystart);
+  ufont.print(':');
+  ufont.setCursor(Xstart + Dx*2  + Dx / 2, Ystart);
+  ufont.print(pTime.tm_min / 10);
+  ufont.setCursor(Xstart + Dx * 3 + Dx / 2, Ystart);
+  ufont.print(pTime.tm_min % 10);
+  /*
+  Paint_DrawChar(Xstart, Ystart, value[pTime->tm_hour / 10], Font, Color_Background, Color_Foreground);
+  Paint_DrawChar(Xstart + Dx, Ystart, value[pTime->tm_hour % 10], Font, Color_Background, Color_Foreground);
+  Paint_DrawChar(Xstart + Dx + Dx / 4 + Dx / 2, Ystart, ':', Font, Color_Background, Color_Foreground);
+  Paint_DrawChar(Xstart + Dx * 2 + Dx / 2, Ystart, value[pTime->tm_min / 10], Font, Color_Background, Color_Foreground);
+  Paint_DrawChar(Xstart + Dx * 3 + Dx / 2, Ystart, value[pTime->tm_min % 10], Font, Color_Background, Color_Foreground);
+  // 没有打印秒数的需求
+  // Paint_DrawChar(Xstart + Dx * 4 + Dx / 2 - Dx / 4, Ystart, ':'                    , Font, Color_Background, Color_Foreground);
+  // Paint_DrawChar(Xstart + Dx * 5                  , Ystart, value[pTime->tm_sec / 10] , Font, Color_Background, Color_Foreground);
+  // Paint_DrawChar(Xstart + Dx * 6                  , Ystart, value[pTime->tm_sec % 10] , Font, Color_Background, Color_Foreground);*/
+}
 /*************页面相关函数 **********************************/
-void calendar(frame &pg)
+
+void calendarpage()
 {
-  pg.color(red);
-  pg.clear();
-  pg.color(black);
-  pg.clear();
-  // background
+  // backgroundpic
   switch (calendarpic)
   {
   case 0:
-    pg.printpicH(gImage_0);
-    calendarpic = 1;
+    epaper.drawBitmap(0, 0,  gImage_0,epaper.width(), epaper.height(),black);
     break; // starrynight
   case 1:
-    pg.printpicH(gImage_1);
-    calendarpic = 2;
+    epaper.drawBitmap(0, 0, gImage_1, epaper.width(), epaper.height(), black);
     break;
   case 2:
-    pg.printpicH(gImage_2b);
-    pg.color(red);
-    pg.printpicH(gImage_2a);
-    pg.color(black);
-    calendarpic = 3;
+    epaper.drawBitmap(0, 0, gImage_2b, epaper.width(), epaper.height(), black);
+    epaper.drawBitmap(0, 0, gImage_2a, epaper.width(), epaper.height(), red);
     break;
   case 3:
-    pg.printpicH(gImage_3);
-    calendarpic = 4;
+    epaper.drawBitmap(0, 0, gImage_3, epaper.width(), epaper.height(), black);
     break;
   case 4:
-    pg.printpicH(gImage_4);
-    calendarpic = 5;
+    epaper.drawBitmap(0, 0, gImage_4, epaper.width(), epaper.height(), black);
     break;
   case 5:
-    pg.printpicH(gImage_5b);
-    pg.color(red);
-    pg.printpicH(gImage_5a);
-    pg.color(black);
-    calendarpic = 0;
+    epaper.drawBitmap(0, 0, gImage_5b, epaper.width(), epaper.height(), black);
+    epaper.drawBitmap(0, 0, gImage_5a, epaper.width(), epaper.height(), red);
     break;
   }
-
-  pg.printtime(160, 0, timeinfo, &Font36B, 0);
+  //ufont.setFont(u8g2_font_inb38_mn);
+  ufont.setFont(my_yahei_pB_32);
+  printclock(150, 20, timeinfo);
   String curmonth;
   String curweekday;
   switch (timeinfo.tm_mon)
@@ -627,28 +377,35 @@ void calendar(frame &pg)
   default:;
   }
 
-  // weather
+  // weather month mday
   String weathersimpleline = weatherinfo.city + " " + weatherinfo.info + " " + (String)weatherinfo.temp + "度";
-  pg.printstr(10, 150, weathersimpleline.c_str(), 1);
-  pg.printline(0, 220, 320, 220, 5, 1);
+  ufont.setFont(my_yahei_pB_32);
+  ufont.drawUTF8(10, 170, weathersimpleline.c_str());
+  ufont.drawUTF8(150, 15 + 2 * (ufont.getFontAscent() - ufont.getFontDescent()), curmonth.c_str());
+  ufont.drawUTF8(150, 15 +3*(ufont.getFontAscent()-ufont.getFontDescent()), curweekday.c_str());
+  //pg.printstr(10, 150, weathersimpleline.c_str(), 1);
+  epaper.fillRect(0, 200, 315, 5, black);
+  //pg.printline(0, 220, 320, 220, 5, 1);
 
   //===
-  pg.color(red);
-
+  //pg.color(red);
+  ufont.setFont(my_yahei_aB_70);ufont.setForegroundColor(red);
   if (timeinfo.tm_mday < 10)
   {
-    pg.printchar(10, 0, '0', &Font72B);
-    pg.printnum(74, 0, timeinfo.tm_mday, &Font72B);
+    
+    ufont.setCursor(22, 27 + ufont.getFontAscent());
+    ufont.print("0");
+    ufont.setCursor(67, 27 + ufont.getFontAscent());
+    ufont.print(timeinfo.tm_mday);
   }
   else
   {
-    pg.printnum(10, 0, timeinfo.tm_mday, &Font72B);
+    ufont.setCursor(22, 27 + ufont.getFontAscent());
+    ufont.print(timeinfo.tm_mday);
   }
-  pg.printstr(170, 60, curmonth.c_str(), 1);
-  pg.printstr(170, 60 + 41, curweekday.c_str(), 1);
-  pg.printline(10, 130, 10 + 64 * 2, 130, 5);
-  // 打印月历
-  printcalendar(10, 270, pg, timeinfo);
-  //===
-  pg.display();
+  epaper.fillRect(14,92,50*2,5,red);
+  ufont.setFont(defaultFONT);
+  ufont.setForegroundColor(black);
+  printcalendar(30, 260);
+  
 }
