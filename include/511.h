@@ -18,11 +18,9 @@
 #include <time.h>
 #include<GxEPD2_3C.h>
 #include<U8g2_for_Adafruit_GFX.h>
-#include <WiFi.h>
 #include <HTTPClient.h>
-//#include <WebServer.h>
-#include <ESPAsyncWebServer.h>
-#include <AsyncTCP.h>
+#include <WebServer.h>
+//#include <ESPAsyncWebServer.h>
 #include <ArduinoJson.h>
 #include <stdlib.h>
 #include <cstring>
@@ -43,8 +41,9 @@
         Weather *nextday;
         String predictday;String predictdaytemp;//仅预报有   
     };
+
     //连接wifi请求
-    bool wificonnect(String ssid,String password);
+    //bool wificonnect(String ssid,String password);
     //设置系统时间
     void setTime();
     //获取当前系统时间
@@ -73,16 +72,5 @@
             bool isPressed();
     };
 
-//framework related functions
-
-bool isleapYear(uint16_t y);
-uint16_t whatDay(uint16_t year,uint16_t month);
-
-//打印一个月历
-void printcalendar(int16_t Xstart, int16_t Ystart);
-void printclock(uint16_t Xstart, uint16_t Ystart, tm &pTime);
-
-//page related functions
-void calendarpage();
 
 #endif

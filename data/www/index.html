@@ -13,6 +13,7 @@
     
         .header {
             background-color: rgb(22, 185, 185);
+            border-radius:0.5rem ;
             color: white;
             padding: 1rem;
         }
@@ -21,12 +22,24 @@
             
             margin-top: 0.5rem;
             padding: 0.2rem 1rem 1rem 1rem;
-            border: 2px solid rgb(22, 185, 76);
-
+            border: 0.2rem solid rgb(22, 185, 185) ;
+            border-radius: 0.5rem;
+            text-align: center;
         }
         #wificon{
-            margin:1rem 0 0 0;
+            margin:1rem 10% 0 10%;
+            
 
+        }
+        #submitbutton{
+            display: block;
+            text-align: right;
+
+        }
+        #github{
+            margin-top: 1rem;
+            margin-left: 0.5rem;
+            display: flex;
         }
     </style>
 </head>
@@ -34,36 +47,48 @@
 <body>
     <div class="header">
         <h1>Esp32 Webserver homepage</h1>
+        <h3 style="text-align: right;display: block;">---Powered by 511</h3>
     </div>
-    <span>*AP:esp32-----password:guofangwei</span>
     <div id="control">
         <span><h2>*控制面板*</h2></span>
         
-        <div>
+        <!-- <div>
             <label for="epaperon"><b>开关:</b></label>
             <button type="button" id="epaperon">开机</button>
             <button type="button" id="epaperoff">关机</button>
             <span>现在状态:</span>
-            <span id="epaperstate">...</span>
-        </div>
+            <span id="epaperstate">...</span> 
+        </div>-->
         <div id="wificon">
-            <span><b>配网:</b></span>
+            <span style="text-align: left;display: block;font-size: larger;";><b>配网(第一次使用或者断电后):</b></span>
             <form action="/wificon" method="get">
-                <label for="ssid">input wifi ssid:</label>
-                <br>
+                <label for="ssid">输入WiFi名称:</label>
+                
                 <input type="text" name="ssid" id="ssid">
                 <br>
-                <label for="password">input wifi password:</label>
-                <br>
-                <input type="password" name="wifipass" id="wifipass">
+                <label for="password">输入WiFi密钥:</label>
                 
-                <input type="submit" value="配网">
+                <input type="password" name="wifipass" id="wifipass">
+                <br>
+                <div id="submitbutton">
+                    <input type="submit" value="确认配网">
+                </div>
+                
             </form>
         </div>
-        
+        <div style="display: block;height: 2rem;"></div>
+        <span style="text-align: left;display: block;">p.s.在成功配网后,Epaper会自动抓取时间和天气信息并更新显示,请耐心等待。目前仅支持连接2.4GHz频段网络。
+        </span>
     </div>
+    <div id="github">
+        <span style="margin-left: 10px;">
+            <a href="https://github.com/KyleXusjtu/7.5inch-ePaper">7.5inch-ePaper</a>
+        </span>
+    </div>
+    
     <script>
         $(function(){
+            /*
             $("#epaperon").click(function(){
                 $("#epaperstate").text("ON");
                 $.ajax({
@@ -85,7 +110,7 @@
                     }
                 });
             });
-
+            */
         });
     </script>
 </body>
