@@ -61,8 +61,8 @@ bool wificonnect(String ssid, String password)
   epaper.firstPage();
   do
   {
-    ufont.setCursor((800 - ufont.getUTF8Width("Connection sucessful!")) / 2, 300 + 2 * prevfontheight);
-    ufont.print("Connection sucessful!");
+    ufont.setCursor((800 - ufont.getUTF8Width("Connect successful!")) / 2, 300 + 2 * prevfontheight);
+    ufont.print("Connect successful!");
     ufont.setFont(defaultFONT);
     ufont.setCursor((800 - ufont.getUTF8Width("获取网络信息中...")) / 2, 300 + 3 * prevfontheight);
     ufont.print("获取网络信息中...");
@@ -124,7 +124,6 @@ void loop()
   if(loadmainpage){
     getTime(timeinfo);
     if(runonce){
-      calendarpage();
       calendarpage();
       runonce = 0;
     }

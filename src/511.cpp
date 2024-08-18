@@ -18,6 +18,7 @@ void setTime()
 {
   
   //get time from ntp server(bug:cant display righttime in first display)
+  /*
   if (time(nullptr) < 1000000000)
     {
     // 如果没有获取过时间，重新获取时间
@@ -31,9 +32,9 @@ void setTime()
     }
     Serial.println("时间同步成功");
   }
-  
+  */
   // get time from juhe api(50times/day)
-  /*
+  
   HTTPClient http;
   bool isgettime = 1;
   while (isgettime)
@@ -61,7 +62,7 @@ void setTime()
   const time_t nowtime = doc["result"]["timestamp"].as<int64_t>() + 10; // 补偿刷新时间
   struct timeval tv = {.tv_sec = nowtime};
   settimeofday(&tv, NULL);
-  doc.clear();*/
+  doc.clear();
 }
 
 // 联网获取天气情况,n<=5为往后预报的天数,记得deleteWeather
