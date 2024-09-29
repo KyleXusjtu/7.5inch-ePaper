@@ -4,3 +4,5 @@
 .vscode/launch.json
 .vscode/ipch
 backup
+libdeps
+!libdeps/esp32dev/GxEPD2

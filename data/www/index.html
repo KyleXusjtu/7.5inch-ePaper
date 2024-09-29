@@ -33,7 +33,7 @@
         }
         #submitbutton{
             display: block;
-            text-align: right;
+            text-align: center;
 
         }
         #github{
@@ -44,7 +44,7 @@
     </style>
 </head>
 
-<body>
+<body onload='getProvince()'>
     <div class="header">
         <h1>Esp32 Webserver homepage</h1>
         <h3 style="text-align: right;display: block;">---Powered by 511</h3>
@@ -70,18 +70,25 @@
                 
                 <input type="password" name="wifipass" id="wifipass">
                 <br>
+                <h2>*城市选择*</h2>
+                <label for="city">请输入查询天气的城市(默认上海闵行)</label>
+                <br>
+                <input type="text" name="city" id="city">
+                <br><br><br>
                 <div id="submitbutton">
                     <input type="submit" value="确认配网">
                 </div>
-                
+            
             </form>
         </div>
         <div style="display: block;height: 2rem;"></div>
         <span style="text-align: left;display: block;">p.s.在成功配网后,Epaper会自动抓取时间和天气信息并更新显示,请耐心等待。目前仅支持连接2.4GHz频段网络。
         </span>
+        <span style="text-align: left;display: block;">--城市支持大部分行政省市区，注意输入不要带‘省’‘市’‘区’字眼。
+        </span>
     </div>
     <div id="github">
-        <span style="margin-left: 10px;">
+        <span style="margin-left: 10px;">仓库链接：
             <a href="https://github.com/KyleXusjtu/7.5inch-ePaper">7.5inch-ePaper</a>
         </span>
     </div>

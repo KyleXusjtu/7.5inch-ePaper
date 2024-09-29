@@ -34,7 +34,9 @@
     //注意天气有实时和预报,内容不同,用*nextday联系
     struct Weather{
         String city;
+        String district;
         String info;//天气情况,预报和实时都有
+        String life;
         int16_t temp;
         int16_t humidity;
         int16_t aqi;

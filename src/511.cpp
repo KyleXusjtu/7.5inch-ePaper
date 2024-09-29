@@ -7,11 +7,9 @@
 // const char* password ="guofangwei";
 // api配置项目
 String weatherurl = "http://apis.juhe.cn/simpleWeather/query";
-String mycity = "长沙"; // 修改天气位置
+String weatherlifeurl = "http://apis.juhe.cn/simpleWeather/life";
+String mycity = "闵行"; // 修改天气位置
 // String key="ef670a1bc22e8ac69bdb5cd12716bd39";
-
-
-
 
 // 通过API获得最新北京时间戳,更新RTC模块
 void setTime()
@@ -114,6 +112,28 @@ void getWeather(Weather &weather, int n)
   doc.clear();
   // Serial.print("天气联网设置成功\r\n");
   p = q = NULL;
+  isgetweather = 1;
+  // Serial.print("联网获取天气中\r\n");
+  while (isgetweather)
+  {
+    http.begin(weatherlifeurl + "?city=" + mycity + "&key=ef670a1bc22e8ac69bdb5cd12716bd39");
+    int http_code = http.GET();
+    if (http_code == 200)
+    {
+      isgetweather = 0;
+      // Serial.print("获取成功\r\n");
+    }
+    else
+    {
+      Serial.print("获取失败,十秒后重新请求\r\n");
+    }
+    delay(1000);
+  }
+  String weatherlife = http.getString();
+  http.end();
+  deserializeJson(doc,weatherlife);
+  weather.life = doc["result"]["life"]["shushidu"]["des"].as<String>();
+  doc.clear();
 }
 // 析构Weather动态分配的内存,n为要析构的次数
 void deleteWeather(Weather &weather, int n)

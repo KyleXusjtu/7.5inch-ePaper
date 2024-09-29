@@ -7,6 +7,7 @@ bool loadmainpage = 0;
 extern tm timeinfo;
 extern Weather weatherinfo;
 extern int calendarpic;
+extern String mycity;
 //AsyncWebServer server(80);//打开异步服务器
 WebServer server(80);//开启Webserver服务
 U8G2_FOR_ADAFRUIT_GFX ufont;
@@ -70,7 +71,7 @@ bool wificonnect(String ssid, String password)
   Serial.println("Connection sucessful");
   Serial.print("IP Address: ");
   Serial.println(WiFi.localIP());
-  catchinfo();
+  catchinfo();//抓取联网时间和天气信息
   return 1;
 }
 
@@ -81,7 +82,7 @@ void catchinfo(){
   getTime(timeinfo);
   getWeather(weatherinfo, 0);
   server.stop();
-  loadmainpage = 1;
+  loadmainpage = 1;//在loop中显示主界面并根据时间刷新
 }
 //build AP server
 void setupserver(){
@@ -103,7 +104,12 @@ void setupserver(){
       } while (epaper.nextPageBW());
       delay(3000);
       wificonnect(ssid, wifipass);
-    } });
+      
+    } 
+    if(!server.arg("city").isEmpty()){
+      mycity = server.arg("city");
+    }
+    });
 
   server.onNotFound([]()
                     { server.send(200, "html/text", "<h1>404 Not Found</h1>"); });
@@ -113,13 +119,23 @@ void setupserver(){
 void setup()
 {
   setupepaper();
-  WiFi.softAP("esp32ap", "guofangwei");//启动热点
+  /*clear screen 
+  epaper.setFullWindow();
+  epaper.firstPage();
+  do
+  {
+    epaper.clearScreen();
+  } while (epaper.nextPage());
+  */
+  WiFi.softAP("esp32ap", "esp32pass");//启动热点
   setupserver();
   welcomepage();
+  //wificonnect("511", "guofangwei");
+  //calendarpage();
 }
 
 void loop()
-{
+{ 
   server.handleClient();
   if(loadmainpage){
     getTime(timeinfo);

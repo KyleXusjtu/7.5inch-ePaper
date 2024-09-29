@@ -3,7 +3,7 @@ extern U8G2_FOR_ADAFRUIT_GFX ufont;
 extern GxEPD2_3C<GxEPD2_750c_Z08, GxEPD2_750c_Z08::HEIGHT / 2> epaper;
 tm timeinfo;         // 时间结构体
 Weather weatherinfo; // 天气结构体
-int calendarpic = 0; // 选择显示的图片
+int calendarpic = 2; // 选择显示的图片
 bool isleapYear(uint16_t y)
 {
     if (y % 4 == 0 && y % 100 != 0 || y % 400 == 0)
@@ -77,9 +77,9 @@ void printcalendar(int16_t Xstart, int16_t Ystart)
     for (int i = 1; i <= months[timeinfo.tm_mon]; i++)
     {
         Xshift += 3 * fontw;
-        if ((fweek - 2 + i) % 7 == 0)
+        if ((fweek - 2 + i) % 7 == 0&&i!=1)
         {
-            Yshift += fonth*1.5;
+            Yshift += fonth*1.2;
             Xshift = 0 * fontw;
         }
         if (i == timeinfo.tm_mday)
@@ -132,8 +132,8 @@ void welcomepage(){
     ufont.setFont(u8g2_font_crox2c_tf);
     ufont.setCursor((epaper.width() - ufont.getUTF8Width("Please Connect my AP and setup WLAN in 192.168.4.1")) / 2, (epaper.height() / 2 + prevfontheight));
     ufont.print("Please Connect my AP and setup WLAN in 192.168.4.1");
-    ufont.setCursor((epaper.width() - ufont.getUTF8Width("AP:esp32ap;password:guofangwei")) / 2, (epaper.height() / 2 + 2*prevfontheight));
-    ufont.print("AP:esp32ap;password:guofangwei");
+    ufont.setCursor((epaper.width() - ufont.getUTF8Width("AP:esp32ap;password:esp32pass")) / 2, (epaper.height() / 2 + 2*prevfontheight));
+    ufont.print("AP:esp32ap;password:esp32pass");
     ufont.setCursor((epaper.width() - ufont.getUTF8Width("Waiting for connection...")) / 2, (epaper.height() / 2 +3* prevfontheight));
     ufont.print("Waiting for connection...");
 
@@ -237,24 +237,38 @@ void calendarpage()
             break;
         default:;
         }
-        String weathersimpleline = weatherinfo.city + " " + weatherinfo.info + " " + (String)weatherinfo.temp + "度";
+        String weathersimpleline = weatherinfo.city + ":" + weatherinfo.info + " " + (String)weatherinfo.temp + "度.";
         ufont.setFont(u8g2_font_logisoso50_tn);
         ufont.setForegroundColor(black);
         printclock(160, 0, timeinfo, 0); // clock
+        
+        ufont.setFont(defaultFONT);
+        ufont.drawUTF8(0, 160, weathersimpleline.c_str());
+        int i1 = 0;
+        for (i1 = 0; i1 < weatherinfo.life.length(); i1++)
+        {
+            if (ufont.getUTF8Width(weatherinfo.life.substring(0, i1 + 1).c_str()) > 310)
+            {
+                break;
+            }
+        }
+        ufont.drawUTF8(0, 160 + prevfontheight, weatherinfo.life.substring(0,i1).c_str());
+        ufont.drawUTF8(0, 160 + 2 * prevfontheight, weatherinfo.life.substring(i1).c_str());               //weather
         ufont.setFont(my_yahei_pB_32);
-        ufont.drawUTF8(10, 180, weathersimpleline.c_str());                                              // weather
         ufont.drawUTF8(160, 100, curmonth.c_str());                                                      // month
         ufont.drawUTF8(160, 100 + (ufont.getFontAscent() - ufont.getFontDescent()), curweekday.c_str()); // week
-        epaper.fillRect(0, 200, 315, 5, black);
-        epaper.fillRect(1, 201, 313, 3, white); // dividing line
+        epaper.fillRect(0, 208, 315, 5, black);
+        epaper.fillRect(1, 209, 313, 3, white); // dividing line
+        epaper.fillRect(0, 208, 1, 280, black);
+        epaper.fillRect(314, 208, 1, 280, black);
         ufont.setFont(u8g2_font_logisoso92_tn);
         ufont.setForegroundColor(red);
-        ufont.setCursor(0, 0 + prevfontheight * 0.9);
+        ufont.setCursor(10, 0 + prevfontheight * 0.9);
         ufont.printf("%02d", timeinfo.tm_mday);                                         // date
         epaper.fillRect(0, 0 + prevfontheight, ufont.getUTF8Width("88") * 1.2, 5, red); // dateunderline
         ufont.setFont(my_yahei_pB_24);
         ufont.setForegroundColor(black);
-        printcalendar(20, 220); // calender
+        printcalendar(20, 215); // calender
     } while (epaper.nextPage());
 }
 void clockupdate(){
