@@ -8,6 +8,7 @@ extern tm timeinfo;
 extern Weather weatherinfo;
 extern int calendarpic;
 extern String mycity;
+#define coverheight 30
 //AsyncWebServer server(80);//打开异步服务器
 WebServer server(80);//开启Webserver服务
 U8G2_FOR_ADAFRUIT_GFX ufont;
@@ -80,7 +81,7 @@ void catchinfo(){
  // wificonnect(ssid, password);
   setTime();
   getTime(timeinfo);
-  getWeather(weatherinfo, 0);
+  getWeather(weatherinfo, 4);
   server.stop();
   loadmainpage = 1;//在loop中显示主界面并根据时间刷新
 }
@@ -119,19 +120,82 @@ void setupserver(){
 void setup()
 {
   setupepaper();
-  /*clear screen 
-  epaper.setFullWindow();
-  epaper.firstPage();
-  do
-  {
-    epaper.clearScreen();
-  } while (epaper.nextPage());
-  */
-  WiFi.softAP("esp32ap", "esp32pass");//启动热点
-  setupserver();
-  welcomepage();
-  //wificonnect("511", "guofangwei");
-  //calendarpage();
+  int _mode = 2;
+  switch(_mode){
+    case 0://clearpage
+      epaper.setFullWindow();
+      epaper.firstPage();
+      do
+      {
+        epaper.clearScreen();
+      } while (epaper.nextPage());
+      break;
+    case 1://main
+      WiFi.softAP("esp32ap", "esp32pass"); // 启动热点
+      setupserver();
+      welcomepage();
+      break;
+    case 2://dev test
+      wificonnect("511", "guofangwei");
+      epaper.setFullWindow();
+      //init temp graph
+      int midtemp = (weatherinfo.nextday->predictdaytemp.substring(0, weatherinfo.predictdaytemp.indexOf('/')).toInt() + weatherinfo.nextday->predictdaytemp.substring(weatherinfo.predictdaytemp.indexOf('/')+1).toInt())/2;
+      temppoint tpt1, tpt2, tpt3;
+      epaper.firstPage();
+      String monthstr;
+      switch (timeinfo.tm_mon)
+      {
+      case 0:
+        monthstr = "January ";
+        break;
+      case 1:
+        monthstr = "February ";
+        break;
+      case 2:
+        monthstr = "March ";
+        break;
+      case 3:
+        monthstr = "April ";
+        break;
+      case 4:
+        monthstr = "May ";
+        break;
+      case 5:
+        monthstr = "June ";
+        break;
+      case 6:
+        monthstr = "July ";
+        break;
+      case 7:
+        monthstr = "Augest ";
+        break;
+      case 8:
+        monthstr = "September ";
+        break;
+      case 9:
+        monthstr = "October ";
+        break;
+      case 10:
+        monthstr = "November ";
+        break;
+      case 11:
+        monthstr = "December ";
+        break;
+      default:;
+      }
+      monthstr += timeinfo.tm_mday;
+      do
+      {
+        ufont.setFont(u8g2_font_lubB18_tr);
+        ufont.drawStr((epaper.width() - ufont.getUTF8Width(monthstr.c_str())) / 2, coverheight + prevfontheight, monthstr.c_str());
+        weathercard(110, 100, midtemp, tpt1, *weatherinfo.nextday->nextday,1);
+        weathercard(340, 100, midtemp, tpt2, *weatherinfo.nextday->nextday->nextday,2);
+        weathercard(570, 100, midtemp, tpt3, *weatherinfo.nextday->nextday->nextday->nextday,3);
+        templine(tpt1, tpt2, tpt3);
+      } while (epaper.nextPage());
+      while(1){}
+      break;
+  }
 }
 
 void loop()
@@ -146,7 +210,7 @@ void loop()
     if(timeinfo.tm_sec==0&&timeinfo.tm_min%5!=0){
       clockupdate();
     }
-    if (timeinfo.tm_min % 5 == 0&&timeinfo.tm_sec==0){
+    if (timeinfo.tm_min % 10 == 0&&timeinfo.tm_sec==0){
       calendarpic++;calendarpic %= 6;
       calendarpage();
     }

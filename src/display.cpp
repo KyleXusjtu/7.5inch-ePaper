@@ -247,7 +247,7 @@ void calendarpage()
         int i1 = 0;
         for (i1 = 0; i1 < weatherinfo.life.length(); i1++)
         {
-            if (ufont.getUTF8Width(weatherinfo.life.substring(0, i1 + 1).c_str()) > 310)
+            if (ufont.getUTF8Width(weatherinfo.life.substring(0, i1).c_str()) > 320)
             {
                 break;
             }
@@ -281,4 +281,88 @@ void clockupdate(){
         printclock(160, 0, timeinfo, 0);
     } while (epaper.nextPageBW());
     
+}
+void weathercard(uint16_t Xstart, uint16_t Ystart, int mt,temppoint &tpt,Weather &weather,int i)
+{
+    //process weather string
+    //temppoint tpt;
+    String date = weather.predictday.substring(weather.predictday.indexOf('-')+1);
+    String info = weather.info;
+    int lowtemp = weather.predictdaytemp.substring(0, weather.predictdaytemp.indexOf('/')).toInt();
+    int hightemp = weather.predictdaytemp.substring(weather.predictdaytemp.indexOf('/')+1).toInt();
+    int weatherico = 0;
+    if(strstr(info.c_str(),"雨")!=NULL)
+        weatherico = 3;
+    else if (strstr(info.c_str(), "晴") != NULL && (strstr(info.c_str(), "云") != NULL || strstr(info.c_str(), "阴") != NULL))
+        weatherico = 1;
+    else if (strstr(info.c_str(), "晴") != NULL)
+        weatherico = 5;
+    else if ((strstr(info.c_str(), "云") != NULL || strstr(info.c_str(), "阴") != NULL))
+        weatherico = 0;
+    //date+info
+    ufont.setFont(u8g2_font_lubI18_tr);
+    ufont.setCursor(Xstart, Ystart+prevfontheight);
+    ufont.printf((date+"(+%d)").c_str(),i);
+    ufont.setFont(defaultFONT);
+    ufont.setCursor(ufont.getCursorX() - (ufont.getUTF8Width(info.c_str())), ufont.getCursorY() + prevfontheight);
+    ufont.print(info);
+    ufont.setFont(u8g2_font_open_iconic_weather_6x_t);
+    ufont.setCursor(ufont.getCursorX() - (ufont.getUTF8Width(info.c_str())) / 2, ufont.getCursorY() + prevfontheight);
+    //ico
+    switch (weatherico)
+    {
+    case 0:
+        ufont.drawGlyph(ufont.getCursorX() - (ufont.getUTF8Width(info.c_str())), ufont.getCursorY(), 0x0040);
+        break;
+    case 1:
+        ufont.drawGlyph(ufont.getCursorX() - (ufont.getUTF8Width(info.c_str())), ufont.getCursorY(), 0x0041);
+        break;
+    case 2:
+        ufont.drawGlyph(ufont.getCursorX() - (ufont.getUTF8Width(info.c_str())), ufont.getCursorY(), 0x0042);
+        break;
+    case 3:
+        ufont.drawGlyph(ufont.getCursorX() - (ufont.getUTF8Width(info.c_str())), ufont.getCursorY(), 0x0043);
+        break;
+    case 4:
+        ufont.drawGlyph(ufont.getCursorX() - (ufont.getUTF8Width(info.c_str())), ufont.getCursorY(), 0x0044);
+        break;
+    case 5:
+        ufont.drawGlyph(ufont.getCursorX() - (ufont.getUTF8Width(info.c_str())), ufont.getCursorY(), 0x0045);
+        break;
+    default:
+        break;
+    }
+    //graph
+    int16_t OpointY = ufont.getCursorY();
+    ufont.setFont(u8g2_font_lubI18_tr);
+    tpt.highX = tpt.lowX = Xstart+ufont.getUTF8Width(date.c_str());
+    tpt.highY = OpointY + (mt + 20 -hightemp)  * 8;
+    tpt.lowY = OpointY + (mt + 20 -lowtemp)  * 8;
+    ufont.setFont(defaultFONT);
+    epaper.drawCircle(tpt.highX, tpt.lowY, 3, black);
+    epaper.drawCircle(tpt.highX, tpt.highY, 3, red);
+    epaper.drawCircle(tpt.highX, tpt.lowY, 2, black);
+    epaper.drawCircle(tpt.highX, tpt.highY, 2, red);
+    epaper.drawCircle(tpt.highX, tpt.lowY, 1, black);
+    epaper.drawCircle(tpt.highX, tpt.highY, 1, red);
+
+    ufont.setCursor(tpt.lowX -10, tpt.lowY + 5+prevfontheight);
+    ufont.print(lowtemp);
+    ufont.setForegroundColor(red);
+    ufont.setCursor(tpt.highX-10, tpt.highY-10);
+    ufont.print(hightemp);
+    ufont.setForegroundColor(black);
+    //return tpt;
+}
+void templine(temppoint tpt1, temppoint tpt2,temppoint tpt3){
+    //Serial.printf("1h坐标(%d,%d),1l坐标(%d,%d)\n", tpt1.highX, tpt1.highY,tpt1.lowX, tpt1.lowY);
+    //Serial.printf("2h坐标(%d,%d),1l坐标(%d,%d)\n", tpt2.highX, tpt2.highY, tpt2.lowX, tpt2.lowY);
+    //Serial.printf("3h坐标(%d,%d),1l坐标(%d,%d)\n", tpt3.highX, tpt3.highY, tpt3.lowX, tpt3.lowY);
+    for (int i:{-1,0,1}){
+        epaper.drawLine(tpt1.highX, tpt1.highY+i, tpt2.highX, tpt2.highY+i, red);
+        epaper.drawLine(tpt1.lowX, tpt1.lowY+i, tpt2.lowX, tpt2.lowY+i, black);
+        epaper.drawLine(tpt2.highX, tpt2.highY+i, tpt3.highX, tpt3.highY+i, red);
+        epaper.drawLine(tpt2.lowX, tpt2.lowY+i, tpt3.lowX, tpt3.lowY+i, black);
+    }
+        
 }

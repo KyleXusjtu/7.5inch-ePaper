@@ -43,7 +43,12 @@
         Weather *nextday;
         String predictday;String predictdaytemp;//仅预报有   
     };
-
+    struct temppoint{
+        int16_t lowX;
+        int16_t lowY;
+        int16_t highX;
+        int16_t highY;
+    };
     //连接wifi请求
     //bool wificonnect(String ssid,String password);
     //设置系统时间
