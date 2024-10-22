@@ -114,6 +114,7 @@ void getWeather(Weather &weather, int n)
   p = q = NULL;
   isgetweather = 1;
   // Serial.print("联网获取天气中\r\n");
+  
   while (isgetweather)
   {
     http.begin(weatherlifeurl + "?city=" + mycity + "&key=ef670a1bc22e8ac69bdb5cd12716bd39");
@@ -133,6 +134,7 @@ void getWeather(Weather &weather, int n)
   http.end();
   deserializeJson(doc,weatherlife);
   weather.life = doc["result"]["life"]["shushidu"]["des"].as<String>();
+
   doc.clear();
 }
 // 析构Weather动态分配的内存,n为要析构的次数

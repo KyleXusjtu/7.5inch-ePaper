@@ -172,6 +172,7 @@ void calendarpage()
         }
         String curmonth;
         String curweekday;
+        
         switch (timeinfo.tm_mon)
         {
         case 0:
@@ -247,7 +248,7 @@ void calendarpage()
         int i1 = 0;
         for (i1 = 0; i1 < weatherinfo.life.length(); i1++)
         {
-            if (ufont.getUTF8Width(weatherinfo.life.substring(0, i1).c_str()) > 320)
+            if (ufont.getUTF8Width(weatherinfo.life.substring(0, i1).c_str()) > 310)
             {
                 break;
             }
@@ -333,7 +334,7 @@ void weathercard(uint16_t Xstart, uint16_t Ystart, int mt,temppoint &tpt,Weather
         break;
     }
     //graph
-    int16_t OpointY = ufont.getCursorY();
+    int16_t OpointY = ufont.getCursorY()+50;
     ufont.setFont(u8g2_font_lubI18_tr);
     tpt.highX = tpt.lowX = Xstart+ufont.getUTF8Width(date.c_str());
     tpt.highY = OpointY + (mt + 20 -hightemp)  * 8;
@@ -354,7 +355,8 @@ void weathercard(uint16_t Xstart, uint16_t Ystart, int mt,temppoint &tpt,Weather
     ufont.setForegroundColor(black);
     //return tpt;
 }
-void templine(temppoint tpt1, temppoint tpt2,temppoint tpt3){
+void templine(temppoint tpt1, temppoint tpt2, temppoint tpt3, temppoint tpt4)
+{
     //Serial.printf("1h坐标(%d,%d),1l坐标(%d,%d)\n", tpt1.highX, tpt1.highY,tpt1.lowX, tpt1.lowY);
     //Serial.printf("2h坐标(%d,%d),1l坐标(%d,%d)\n", tpt2.highX, tpt2.highY, tpt2.lowX, tpt2.lowY);
     //Serial.printf("3h坐标(%d,%d),1l坐标(%d,%d)\n", tpt3.highX, tpt3.highY, tpt3.lowX, tpt3.lowY);
@@ -363,6 +365,153 @@ void templine(temppoint tpt1, temppoint tpt2,temppoint tpt3){
         epaper.drawLine(tpt1.lowX, tpt1.lowY+i, tpt2.lowX, tpt2.lowY+i, black);
         epaper.drawLine(tpt2.highX, tpt2.highY+i, tpt3.highX, tpt3.highY+i, red);
         epaper.drawLine(tpt2.lowX, tpt2.lowY+i, tpt3.lowX, tpt3.lowY+i, black);
+        epaper.drawLine(tpt3.highX, tpt3.highY + i, tpt4.highX, tpt4.highY + i, red);
+        epaper.drawLine(tpt3.lowX, tpt3.lowY + i, tpt4.lowX, tpt4.lowY + i, black);
     }
-        
+}
+void printsimpledate(){
+    String curmonth;
+    String curweekday;
+    String curaqi;
+    char timestring[20];
+    sprintf(timestring, "%02d:%02d:%02d", timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec);
+    switch (timeinfo.tm_mon)
+    {
+    case 0:
+        curmonth = "一月";
+        break;
+    case 1:
+        curmonth = "二月";
+        break;
+    case 2:
+        curmonth = "三月";
+        break;
+    case 3:
+        curmonth = "四月";
+        break;
+    case 4:
+        curmonth = "五月";
+        break;
+    case 5:
+        curmonth = "六月";
+        break;
+    case 6:
+        curmonth = "七月";
+        break;
+    case 7:
+        curmonth = "八月";
+        break;
+    case 8:
+        curmonth = "九月";
+        break;
+    case 9:
+        curmonth = "十月";
+        break;
+    case 10:
+        curmonth = "十一月";
+        break;
+    case 11:
+        curmonth = "十二月";
+        break;
+    default:;
+    }
+    switch (timeinfo.tm_wday)
+
+    {
+    case 0:
+        curweekday = " 星期日";
+        break;
+    case 1:
+        curweekday = " 星期一";
+        break;
+    case 2:
+        curweekday = " 星期二";
+        break;
+    case 3:
+        curweekday = " 星期三";
+        break;
+    case 4:
+        curweekday = " 星期四";
+        break;
+    case 5:
+        curweekday = " 星期五";
+        break;
+    case 6:
+        curweekday = " 星期六";
+        break;
+    default:;
+    }
+    
+    ufont.setFont(u8g2_font_open_iconic_all_2x_t);
+    ufont.setForegroundColor(red);
+    ufont.drawGlyph(20, 20 + prevfontheight, 0x006b);
+    ufont.setForegroundColor(black);
+    ufont.setFont(defaultFONT);
+    ufont.setCursor(40, 20 + prevfontheight);
+    ufont.print( (curmonth + curweekday).c_str());
+    ufont.setCursor(20, ufont.getCursorY() + prevfontheight);
+    ufont.print(weatherinfo.city+": "+weatherinfo.info+" 温度："+weatherinfo.temp+"℃");
+    //aqi
+    ufont.setCursor(20, ufont.getCursorY() + prevfontheight);
+    ufont.print("AQI:");
+    switch (weatherinfo.aqi/50)
+    {
+    case 0:
+        curaqi="优秀,出门透透气吧";
+        break;
+    case 1:
+        curaqi="良好，可以正常室外活动";
+        break;
+    case 2:
+        curaqi="轻度污染敏感人群应注意";
+        break;
+    case 3:
+        curaqi="中度污染，适量减少活动";
+        break;
+    case 4:
+    case 5:     
+        curaqi="重度污染，应减少室外活动";
+        break;
+    case 6:
+    case 7:
+        curaqi="严重污染，应避免室外活动";
+        break;
+
+    }        
+    epaper.drawRect(60, ufont.getCursorY()-prevfontheight+5, 120, prevfontheight, black);
+    for (int i = 60; i < weatherinfo.aqi*120/300+60; i++)
+    {
+        epaper.drawFastVLine(i, ufont.getCursorY() - prevfontheight+5, prevfontheight, black);
+    }
+    ufont.setCursor(185, ufont.getCursorY());
+    ufont.print(weatherinfo.aqi);
+    ufont.setCursor(20, ufont.getCursorY() + prevfontheight+5);
+    ufont.print(curaqi);
+}
+void weatherpage(){
+    // init temp graph
+    int midtemp = (weatherinfo.nextday->predictdaytemp.substring(0, weatherinfo.predictdaytemp.indexOf('/')).toInt() + weatherinfo.nextday->predictdaytemp.substring(weatherinfo.predictdaytemp.indexOf('/') + 1).toInt()) / 2;
+    temppoint tpt1, tpt2, tpt3, tpt4;
+    epaper.setFullWindow();
+    epaper.firstPage();
+    do
+    {
+        weathercard(20, 100, midtemp, tpt1, *weatherinfo.nextday, 0);
+        weathercard(220, 100, midtemp, tpt2, *weatherinfo.nextday->nextday, 1);
+        weathercard(420, 100, midtemp, tpt3, *weatherinfo.nextday->nextday->nextday, 2);
+        weathercard(620, 100, midtemp, tpt4, *weatherinfo.nextday->nextday->nextday->nextday, 3);
+        templine(tpt1, tpt2, tpt3, tpt4);
+        epaper.drawRoundRect(10, 10, 200, 210, 10, red);
+        epaper.drawRoundRect(9, 9, 202, 212, 10, red);
+        printsimpledate();
+        ufont.setFont(u8g2_font_tenfatguys_tf);
+        ufont.setForegroundColor(red);
+        ufont.drawGlyph(10, 220 + prevfontheight, 0x007b);
+        ufont.drawUTF8(30, 220 + prevfontheight, "Today");
+        ufont.setForegroundColor(black);
+        ufont.drawGlyph(220, 80 + prevfontheight, 0x00bb);
+        ufont.drawUTF8(240, 80 + prevfontheight, "Forecast");
+        ufont.drawGlyph(10, 220 + 2.5 * prevfontheight, 0x007d);
+        ufont.drawUTF8(30, 220 + 2.5 * prevfontheight, "Temperature Graph");
+    } while (epaper.nextPage());
 }
